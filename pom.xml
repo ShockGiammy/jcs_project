@@ -35,7 +35,7 @@
   <build>
   <resources>
   	<resource>
-  	  <directory>test-conf</directory>
+  	  <directory>src/test-conf</directory>
   	  <includes>
   	    <include>**/*.ccf</include>
   	  </includes>
