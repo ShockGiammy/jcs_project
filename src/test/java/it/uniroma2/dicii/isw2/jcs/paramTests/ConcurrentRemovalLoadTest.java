@@ -5,8 +5,6 @@ import org.apache.jcs.access.exception.CacheException;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.extensions.ActiveTestSuite;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,14 +29,25 @@ import junit.extensions.ActiveTestSuite;
  */
 public class ConcurrentRemovalLoadTest {
 	
-	private ActiveTestSuite suite;
+	RemovalTestUtil testUtilRemove;
+	RemovalTestUtil testUtilPut;
+	RemovalTestUtil testUtilPut2;
+    RemovalTestUtil testUtilPut3;
+    RemovalTestUtil testUtilRemove2;
+    RemovalTestUtil testUtilRemove3;
+    RemovalTestUtil testUtilPut4;
     
 	@Before
-    public void configure() throws CacheException {
+    public void configure() throws Exception {
 		JCS.setConfigFilename( "/TestRemoval.ccf" );
         JCS.getInstance( "testCache1" );
-        suite = new ActiveTestSuite();
-        
+        testUtilRemove = new RemovalTestUtil( "testRemoveCache1" );
+		testUtilPut = new RemovalTestUtil( "testPutCache1" );
+		testUtilPut2 = new RemovalTestUtil( "testPutCache2" );
+		testUtilPut3 = new RemovalTestUtil( "testPutCache3" );
+		testUtilRemove2 = new RemovalTestUtil( "testRemoveCache1" );
+		testUtilRemove3 = new RemovalTestUtil( "testRemoveCache1" );
+		testUtilPut4 = new RemovalTestUtil( "testPutCache2" );
     }
 
     /**
@@ -47,73 +56,25 @@ public class ConcurrentRemovalLoadTest {
      * @return 
      *
      * @return The test suite
+     * @throws Exception 
      */
 	@Test
-    public void TestSuite() {
+    public void TestSuite() throws Exception {
 
-        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                runTestPutThenRemoveCategorical( 0, 200 );
-            }
-        } );
+		testUtilRemove.runTestPutThenRemoveCategorical( 0, 200 );
 
-        suite.addTest( new RemovalTestUtil( "testPutCache1" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                runPutInRange( 300, 400 );
-            }
-        } );
-
-        suite.addTest( new RemovalTestUtil( "testPutCache2" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                runPutInRange( 401, 600 );
-            }
-        } );
+		testUtilPut.runPutInRange( 300, 400 );
+       
+		testUtilPut2.runPutInRange( 401, 600 );
 
         // stomp on previous put
-        suite.addTest( new RemovalTestUtil( "testPutCache3" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                runPutInRange( 401, 600 );
-            }
-        } );
+        testUtilPut3.runPutInRange( 401, 600 );
+        
+        testUtilRemove2.runTestPutThenRemoveCategorical( 601, 700 );
 
-        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                runTestPutThenRemoveCategorical( 601, 700 );
-            }
-        } );
+        testUtilRemove3.runTestPutThenRemoveCategorical( 701, 800 );
 
-        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                runTestPutThenRemoveCategorical( 701, 800 );
-            }
-        } );
+       	testUtilPut4.runGetInRange( 0, 1000, false );
 
-        suite.addTest( new RemovalTestUtil( "testPutCache2" )
-        {
-            // verify that there are no errors with concurrent gets.
-            public void runTest()
-                throws Exception
-            {
-                runGetInRange( 0, 1000, false );
-            }
-        } );
     }
 }

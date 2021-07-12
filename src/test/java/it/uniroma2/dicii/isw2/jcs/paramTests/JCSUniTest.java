@@ -42,6 +42,8 @@ public class JCSUniTest {
     private JCS jcs;
     private String key_value;
     private LinkedList list;
+    int start;
+    int end;
 
     /**
      * @param args
@@ -52,6 +54,8 @@ public class JCSUniTest {
         jcs = JCS.getInstance("testCache1");
         key_value = "some:key";
         list = buildList();
+        start = 0;
+        end = 100000; //100; 10000
     }
 
     /**
@@ -68,7 +72,7 @@ public class JCSUniTest {
     {
         LinkedList list = new LinkedList();
 
-        for ( int i = 0; i < 100; i++ )
+        for ( int i = start; i < end; i++ )
         {
             list.add( buildMap() );
         }
