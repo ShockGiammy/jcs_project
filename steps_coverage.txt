@@ -1,0 +1,11 @@
+java -jar /home/gian/Documenti/jacoco-0.8.7/lib/jacococli.jar instrument /home/gian/Documenti/jcs-1.3.jar --dest /home/gian/Documenti/jcs_project
+
+
+mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify
+
+
+mkdir -p target/jacoco-gen/jcs-coverage/
+
+
+java -jar /home/gian/Documenti/jacoco-0.8.7/lib/jacococli.jar report target/jacoco.exec --classfiles /home/gian/Documenti/jcs-1.3.jar --sourcefiles /home/gian/Documenti/jcs-1.3 --html target/jacoco-gen/jcs-coverage/ --xml target/jacoco-gen/jcs-coverage/file.xml --csv target/jacoco-gen/jcs-coverage/file.csv
+
